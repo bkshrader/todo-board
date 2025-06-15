@@ -11,7 +11,18 @@ export default defineConfig({
             ssr: 'resources/js/ssr.tsx',
             refresh: true,
         }),
-        react(),
+        react({
+            babel: {
+                plugins: [
+                    [
+                        '@locator/babel-jsx/dist',
+                        {
+                            env: 'development',
+                        },
+                    ],
+                ],
+            },
+        }),
         tailwindcss(),
     ],
     esbuild: {
