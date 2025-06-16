@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreBoardRequest;
+use App\Http\Requests\UpdateBoardRequest;
+use App\Models\Board;
+use Inertia\Inertia;
+
+class BoardController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return Inertia::render('boards');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // TODO Create a view for creating a board
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreBoardRequest $request)
+    {
+        $board = Board::create($request->validated() + ['owner_id' => $request->user()->id]);
+
+        return redirect()->route('boards.show', $board)->with('success', 'Board created successfully.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Board $board)
+    {
+        // TODO Create a view for showing a single board
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Board $board)
+    {
+        // TODO Create a view for editing a board
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateBoardRequest $request, Board $board)
+    {
+        $board->update($request->validated());
+
+        return redirect()->route('boards.show', $board)->with('success', 'Board updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Board $board)
+    {
+        $board->delete();
+
+        return redirect()->route('boards.index')->with('success', 'Board deleted successfully.');
+    }
+}
