@@ -13,6 +13,15 @@ class Board extends Model
 
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'emoji',
+        'color',
+        'visibility',
+        'owner_id',
+    ];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');

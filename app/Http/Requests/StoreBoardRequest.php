@@ -24,8 +24,8 @@ class StoreBoardRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'color' => 'nullable|string|max:7|regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
+            'emoji' => 'nullable|string|max:2',
+            'color' => 'nullable|string|hex_color',
             'visibility' => 'required|in:public,private', // TODO convert to enum
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Board;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class BoardPolicy
 {
@@ -37,6 +38,8 @@ class BoardPolicy
      */
     public function update(User $user, Board $board): bool
     {
+        Log::info('Checking update permission for user '.$user->id.' on board '.$board->id);
+
         return $user->is($board->owner);
     }
 

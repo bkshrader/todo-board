@@ -18,9 +18,9 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->string('name');
-            $table->longText('description')->nullable();
-            $table->string('image')->nullable();
-            $table->string('color')->default('#ffffff');
+            $table->text('description')->nullable();
+            $table->tinyText('emoji')->nullable();
+            $table->string('color')->default('#ffffff')->nullable();
             $table->string('visibility')->default('public'); // 'public' or 'private'
             $table->timestamps();
             $table->softDeletes();

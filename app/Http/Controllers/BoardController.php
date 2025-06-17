@@ -22,7 +22,7 @@ class BoardController extends Controller
      */
     public function create()
     {
-        // TODO Create a view for creating a board
+        return Inertia::render('boards/create');
     }
 
     /**
@@ -30,7 +30,7 @@ class BoardController extends Controller
      */
     public function store(StoreBoardRequest $request)
     {
-        $board = Board::create($request->validated() + ['owner_id' => $request->user()->id]);
+        $board = $request->user()->boards()->create($request->validated());
 
         return redirect()->route('boards.show', $board)->with('success', 'Board created successfully.');
     }
@@ -40,7 +40,9 @@ class BoardController extends Controller
      */
     public function show(Board $board)
     {
-        // TODO Create a view for showing a single board
+        return Inertia::render('boards/show', [
+            'board' => $board,
+        ]);
     }
 
     /**
@@ -48,7 +50,9 @@ class BoardController extends Controller
      */
     public function edit(Board $board)
     {
-        // TODO Create a view for editing a board
+        return Inertia::render('boards/edit', [
+            'board' => $board,
+        ]);
     }
 
     /**

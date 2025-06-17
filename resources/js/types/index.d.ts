@@ -26,6 +26,7 @@ export interface SharedData {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    topBoards: Board[] | null;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
     [key: string]: unknown;
@@ -40,4 +41,17 @@ export interface User {
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Board {
+    id: number;
+    owner_id: number;
+    name: string;
+    visibility: 'public' | 'private';
+    description?: string | null;
+    emoji?: string | null;
+    color?: string | null;
+    created_at?: string;
+    updated_at?: string;
+    deleted_at?: string | null;
 }
