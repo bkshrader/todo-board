@@ -16,7 +16,7 @@ export default function BoardAvatar({ board, className, ...props }: BoardAvatarP
     );
 
     return (
-        <div style={{ backgroundColor: board.color }} className={mergedClass} {...props}>
+        <div style={{ backgroundColor: board.color || undefined }} className={mergedClass} {...props}>
             {/* TODO stretch text to fill available space */}
             <span>{board.emoji || getInitials(board.name)}</span>
         </div>
