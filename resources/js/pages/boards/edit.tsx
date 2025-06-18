@@ -9,7 +9,8 @@ import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { TextArea } from '@/components/ui/textarea';
 import { useOmit } from '@/hooks/use-omit';
 import AppLayout from '@/layouts/app-layout';
-import { Check, LoaderCircle, X } from 'lucide-react';
+import { Check, LoaderCircle, Trash, X } from 'lucide-react';
+import { useState } from 'react';
 
 type EditBoardForm = Omit<Board, 'id' | 'owner_id' | 'created_at' | 'updated_at' | 'deleted_at'>;
 export default function Show({ board }: { board: Board }) {
@@ -26,20 +27,39 @@ export default function Show({ board }: { board: Board }) {
 
     const omit = useOmit();
 
-    const { data, setData, put, processing, errors } = useForm<EditBoardForm>(
-        omit(board, ['id', 'owner_id', 'created_at', 'updated_at', 'deleted_at']),
-    );
+    const [showConfirm, setShowConfirm] = useState(false);
+
+    const {
+        data,
+        setData,
+        put,
+        delete: destroy,
+        processing,
+        errors,
+    } = useForm<EditBoardForm>(omit(board, ['id', 'owner_id', 'created_at', 'updated_at', 'deleted_at']));
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         put(route('boards.update', { board: board.id }));
     };
 
+    const handleDelete = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (showConfirm) {
+            // Only destroy board if delete button is clicked twice to confirm
+            destroy(route('boards.destroy', { board: board.id }));
+        } else {
+            // Show confirm button before destroying board
+            setShowConfirm(true);
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={board.name} />
             <div id="board-header">
-                <form className="flex flex-row items-baseline gap-2 p-4" onSubmit={submit}>
+                <form className="flex flex-row gap-2 p-4" onSubmit={submit}>
                     <div className="flex flex-col gap-0.5">
                         {/* TODO replace input with color picker */}
                         <Label htmlFor="color" className="text-xs">
@@ -110,12 +130,26 @@ export default function Show({ board }: { board: Board }) {
                     </div>
 
                     <div className="ml-auto flex flex-row items-center gap-2">
-                        <Button type="submit" title="Submit" className="h-6 w-6" tabIndex={5} disabled={processing}>
+                        <Button
+                            type="button"
+                            variant={showConfirm ? 'destructive' : 'outline'}
+                            title="Delete"
+                            data-confirm={showConfirm}
+                            className="h-8 w-8 transition-[width] data-[confirm=true]:w-36"
+                            onClick={handleDelete}
+                            onBlur={() => setShowConfirm(false)}
+                        >
+                            <Trash className="h-4 w-4" />
+                            <span data-confirm={showConfirm} className="hidden overflow-hidden transition-discrete data-[confirm=true]:inline-block">
+                                Delete Board
+                            </span>
+                        </Button>
+                        <Button type="submit" title="Submit" className="h-8 w-8" tabIndex={5} disabled={processing}>
                             {processing ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                         </Button>
 
                         <Link href={route('boards.show', { board: board.id })} disabled={processing}>
-                            <Button type="button" variant={'outline'} title="Cancel" className="h-6 w-6">
+                            <Button type="button" variant="outline" title="Cancel" className="h-8 w-8">
                                 <X className="h-4 w-4" />
                             </Button>
                         </Link>
