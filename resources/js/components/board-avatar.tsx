@@ -16,7 +16,7 @@ export default function BoardAvatar({ board, className, ...props }: BoardAvatarP
                 style={{ backgroundColor: board.color || undefined }}
                 className="@container flex h-[100cqmin] w-[100cqmin] items-center justify-center rounded-full bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
             >
-                <span className="leading-[calc(1rem / 60cqi)] text-[60cqi]">{board.emoji || getInitials(board.name)}</span>
+                <span className="text-[60cqi] leading-[calc(1rem/60cqi)]">{board.emoji || getInitials(board.name)}</span>
             </div>
         </div>
     );
