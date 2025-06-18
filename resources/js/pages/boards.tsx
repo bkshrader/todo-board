@@ -30,7 +30,6 @@ export default function Boards({ boards }: BoardsProps) {
                         <tr>
                             <th className="rounded-tl p-1">Name</th>
                             <th className="p-1">Description</th>
-                            <th className="p-1">Visibility</th>
                             <th className="rounded-tr p-1">Last Updated</th>
                         </tr>
                     </thead>
@@ -43,7 +42,6 @@ export default function Boards({ boards }: BoardsProps) {
                             >
                                 <td className="p-1">{board.name}</td>
                                 <td className="p-1">{board.description}</td>
-                                <td className="p-1 capitalize">{board.visibility}</td>
                                 <td className="p-1">{board.updated_at && new Date(board.updated_at).toLocaleDateString()}</td>
                             </tr>
                         ))}

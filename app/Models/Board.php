@@ -18,7 +18,6 @@ class Board extends Model
         'description',
         'emoji',
         'color',
-        'visibility',
         'owner_id',
     ];
 

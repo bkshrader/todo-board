@@ -26,7 +26,6 @@ class StoreBoardRequest extends FormRequest
             'description' => 'nullable|string|max:1000',
             'emoji' => 'nullable|string|max:2',
             'color' => 'nullable|string|hex_color',
-            'visibility' => 'required|in:public,private', // TODO convert to enum
         ];
     }
 }

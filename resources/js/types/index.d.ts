@@ -47,7 +47,6 @@ export interface Board {
     id: number;
     owner_id: number;
     name: string;
-    visibility: 'public' | 'private';
     description?: string | null;
     emoji?: string | null;
     color?: string | null;

@@ -109,27 +109,6 @@ export default function Show({ board }: { board: Board }) {
                         <InputError message={errors.description} className="mt-2" />
                     </div>
 
-                    <div className="flex flex-col gap-0.5">
-                        <Label htmlFor="visibility" className="text-xs">
-                            Visibility
-                        </Label>
-                        <div className="flex flex-row gap-2">
-                            {/* TODO replace input with select */}
-                            <Label htmlFor="visibility" className="text-sm">
-                                Make Public
-                            </Label>
-                            <Input
-                                id="visibility"
-                                type="checkbox"
-                                className="h-4 w-4"
-                                checked={data.visibility === 'public'}
-                                onChange={(e) => setData('visibility', e.target.checked ? 'public' : 'private')}
-                                disabled={processing}
-                            />
-                        </div>
-                        <InputError message={errors.visibility} className="mt-2" />
-                    </div>
-
                     <div className="ml-auto flex flex-row items-center gap-2">
                         <Button type="submit" title="Submit" className="h-6 w-6" tabIndex={5} disabled={processing}>
                             {processing ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}

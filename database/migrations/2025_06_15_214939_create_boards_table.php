@@ -20,8 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->tinyText('emoji')->nullable();
-            $table->string('color')->default('#ffffff')->nullable();
-            $table->string('visibility')->default('public'); // 'public' or 'private'
+            $table->string('color')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

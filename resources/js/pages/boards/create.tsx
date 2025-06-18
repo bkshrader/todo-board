@@ -19,7 +19,6 @@ export default function Create() {
         description: '',
         emoji: null,
         color: null,
-        visibility: 'private',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -72,20 +71,6 @@ export default function Create() {
                             placeholder="Board description (optional)"
                         />
                         <InputError message={errors.description} />
-                    </div>
-
-                    <div className="flex flex-row gap-2">
-                        <Label htmlFor="visibility">Make Public</Label>
-                        <Input
-                            id="visibility"
-                            type="checkbox"
-                            className="h-4 w-4"
-                            tabIndex={3}
-                            value={data.visibility}
-                            onChange={(e) => setData('visibility', e.target.value ? 'public' : 'private')}
-                            disabled={processing}
-                        />
-                        <InputError message={errors.visibility} />
                     </div>
 
                     <div className="grid grid-cols-3 gap-2">
