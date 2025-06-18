@@ -6,7 +6,6 @@ import BoardAvatar from './board-avatar';
 
 export function NavBoards({ boards }: { boards?: Board[] | null }) {
     const page = usePage();
-    console.log(`${page.url}: ${route('boards.show', { board: boards?.[0]?.id })}`);
     return (
         <SidebarGroup className="px-2 py-0">
             <SidebarGroupLabel>Boards</SidebarGroupLabel>
