@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Models\Board;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class BoardController extends Controller
@@ -12,9 +13,13 @@ class BoardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('boards');
+        $boards = $request->user()->boards()->paginate(15);
+
+        return Inertia::render('boards', [
+            'boards' => $boards,
+        ]);
     }
 
     /**

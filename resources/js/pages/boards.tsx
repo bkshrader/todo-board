@@ -1,6 +1,8 @@
+import PaginatorControls from '@/components/ui/paginator-controls';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Board, type BreadcrumbItem } from '@/types';
+import { LengthAwarePaginator } from '@/types/laravel';
+import { Head, router } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -9,32 +11,44 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Boards() {
+type BoardsProps = {
+    boards: LengthAwarePaginator<Board>;
+};
+
+export default function Boards({ boards }: BoardsProps) {
+    const routeToBoard = (board: Board) => {
+        router.visit(route('boards.show', { board: board.id }));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Boards" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <table>
-                    <thead className="rounded-lg bg-neutral-200 dark:bg-neutral-800">
+            <div className="flex h-full flex-1 flex-col justify-stretch gap-1 p-4">
+                {/* TODO make or import better table component and implement sorting */}
+                <table className="flex-grow border-separate rounded border-1 border-black">
+                    <thead className="bg-neutral-200 text-left dark:bg-neutral-700">
                         <tr>
-                            <td>Name</td>
-                            <td>Description</td>
-                            <td>Tasks</td>
+                            <th className="rounded-tl p-1">Name</th>
+                            <th className="p-1">Description</th>
+                            <th className="p-1">Visibility</th>
+                            <th className="rounded-tr p-1">Last Updated</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Board One</td>
-                            <td>This is the first board</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td>Board Two</td>
-                            <td>This is the second board</td>
-                            <td>0</td>
-                        </tr>
+                        {boards.data.map((board) => (
+                            <tr
+                                className="max-h-8 bg-white last:rounded-b even:bg-neutral-100 dark:bg-neutral-800 dark:even:bg-neutral-900"
+                                key={board.id}
+                            >
+                                <td className="p-1">{board.name}</td>
+                                <td className="p-1">{board.description}</td>
+                                <td className="p-1 capitalize">{board.visibility}</td>
+                                <td className="p-1">{board.updated_at && new Date(board.updated_at).toLocaleDateString()}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
+                <PaginatorControls page={boards} />
             </div>
         </AppLayout>
     );
