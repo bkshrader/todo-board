@@ -10,15 +10,14 @@ type BoardAvatarProps = {
 export default function BoardAvatar({ board, className, ...props }: BoardAvatarProps) {
     const getInitials = useInitials();
 
-    const mergedClass = cn(
-        'flex aspect-square h-6 w-auto items-center justify-center rounded-full bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white',
-        className,
-    );
-
     return (
-        <div style={{ backgroundColor: board.color || undefined }} className={mergedClass} {...props}>
-            {/* TODO stretch text to fill available space */}
-            <span>{board.emoji || getInitials(board.name)}</span>
+        <div className={cn('@container h-8 w-8', className)} {...props}>
+            <div
+                style={{ backgroundColor: board.color || undefined }}
+                className="@container flex h-[100cqmin] w-[100cqmin] items-center justify-center rounded-full bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
+            >
+                <span className="leading-[calc(1rem / 60cqi)] text-[60cqi]">{board.emoji || getInitials(board.name)}</span>
+            </div>
         </div>
     );
 }

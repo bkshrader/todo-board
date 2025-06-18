@@ -90,7 +90,7 @@ export default function Create() {
 
                     <div className="grid grid-cols-3 gap-2">
                         <div className="flex items-center justify-center">
-                            <BoardAvatar className="h-full w-auto" board={{ name: data.name, emoji: data.emoji, color: data.color }} />
+                            <BoardAvatar className="h-full max-h-40 w-full max-w-40" board={data} />
                         </div>
                         <div className="col-span-2 flex flex-col gap-6">
                             <div className="grid gap-2">
