@@ -16,7 +16,7 @@ type BoardsProps = {
 };
 
 export default function Boards({ boards }: BoardsProps) {
-    const routeToBoard = (board: Board) => {
+    const openBoard = (board: Board) => () => {
         router.visit(route('boards.show', { board: board.id }));
     };
 
@@ -25,7 +25,7 @@ export default function Boards({ boards }: BoardsProps) {
             <Head title="Boards" />
             <div className="flex h-full flex-1 flex-col justify-stretch gap-1 p-4">
                 {/* TODO make or import better table component and implement sorting */}
-                <table className="flex-grow border-separate rounded border-1 border-black">
+                <table className="flex-grow border-separate rounded border-1 border-white dark:border-black">
                     <thead className="bg-neutral-200 text-left dark:bg-neutral-700">
                         <tr>
                             <th className="rounded-tl p-1">Name</th>
@@ -37,8 +37,9 @@ export default function Boards({ boards }: BoardsProps) {
                     <tbody>
                         {boards.data.map((board) => (
                             <tr
-                                className="max-h-8 bg-white last:rounded-b even:bg-neutral-100 dark:bg-neutral-800 dark:even:bg-neutral-900"
+                                className="max-h-8 bg-neutral-50 last:rounded-b even:bg-neutral-100 hover:bg-white dark:bg-neutral-800 dark:even:bg-neutral-900 hover:dark:bg-neutral-600"
                                 key={board.id}
+                                onClick={openBoard(board)}
                             >
                                 <td className="p-1">{board.name}</td>
                                 <td className="p-1">{board.description}</td>
