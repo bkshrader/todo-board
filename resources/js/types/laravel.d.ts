@@ -13,3 +13,12 @@ export type LengthAwarePaginator<T> = {
     to: number | null;
     total: number;
 };
+
+export type Timestamps<C = string, U = string> = {
+    created_at?: C;
+    updated_at?: U;
+};
+
+export type SoftDeletes<D = string> = {
+    deleted_at?: D | null;
+};
