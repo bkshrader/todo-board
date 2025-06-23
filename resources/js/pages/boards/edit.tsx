@@ -26,6 +26,10 @@ export default function Show({ board }: { board: Board }) {
             title: board.name,
             href: route('boards.show', { board: board }),
         },
+        {
+            title: 'Edit',
+            href: route('boards.edit', { board: board }),
+        },
     ];
 
     const omit = useOmit();
