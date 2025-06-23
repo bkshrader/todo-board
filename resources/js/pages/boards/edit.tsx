@@ -1,6 +1,7 @@
 import { Category, type Board, type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 
+import DestroyButton from '@/components/button-destroy';
 import { CategoryCard, CategoryEditor } from '@/components/category';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -29,7 +30,6 @@ export default function Show({ board }: { board: Board }) {
 
     const omit = useOmit();
 
-    const [showConfirm, setShowConfirm] = useState(false);
     const [showCreateCategory, setShowCreateCategory] = useState(false);
 
     const {
@@ -46,16 +46,8 @@ export default function Show({ board }: { board: Board }) {
         put(route('boards.update', { board: board.id }));
     };
 
-    const handleDelete = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (showConfirm) {
-            // Only destroy board if delete button is clicked twice to confirm
-            destroy(route('boards.destroy', { board: board.id }));
-        } else {
-            // Show confirm button before destroying board
-            setShowConfirm(true);
-        }
+    const handleDelete = () => {
+        destroy(route('boards.destroy', { board: board.id }));
     };
 
     const handleCategoryBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -140,20 +132,16 @@ export default function Show({ board }: { board: Board }) {
                     </div>
 
                     <div className="ml-auto flex flex-row items-center gap-2">
-                        <Button
+                        <DestroyButton
                             type="button"
-                            variant={showConfirm ? 'destructive' : 'outline'}
-                            title="Delete"
-                            data-confirm={showConfirm}
-                            className="h-8 w-8 transition-[width] data-[confirm=true]:w-36"
+                            variant="outline"
+                            title="Delete board"
+                            className="h-8 w-8 transition data-[confirm=true]:w-min"
                             onClick={handleDelete}
-                            onBlur={() => setShowConfirm(false)}
                         >
                             <Trash className="h-4 w-4" />
-                            <span data-confirm={showConfirm} className="hidden overflow-hidden transition-discrete data-[confirm=true]:inline-block">
-                                Delete Board
-                            </span>
-                        </Button>
+                            <span className="hidden overflow-hidden transition-discrete in-data-[confirm=true]:inline-block">Delete Board</span>
+                        </DestroyButton>
                         <Button type="submit" title="Submit" className="h-8 w-8" tabIndex={5} disabled={processing}>
                             {processing ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                         </Button>
