@@ -11,7 +11,7 @@ import { TextArea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { Board } from '@/types';
 
-type CreateBoardForm = Omit<Board, 'id' | 'owner_id' | 'created_at' | 'updated_at' | 'deleted_at'>;
+type CreateBoardForm = Omit<Board, 'id' | 'owner_id' | 'categories' | 'created_at' | 'updated_at' | 'deleted_at'>;
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm<CreateBoardForm>({

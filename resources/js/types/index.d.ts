@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
+import type { SoftDeletes, Timestamps } from './laravel';
 
 export interface Auth {
     user: User;
@@ -43,14 +44,18 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface Board {
+export interface Board extends Timestamps, SoftDeletes {
     id: number;
     owner_id: number;
     name: string;
     description?: string | null;
     emoji?: string | null;
     color?: string | null;
-    created_at?: string;
-    updated_at?: string;
-    deleted_at?: string | null;
+    categories?: Category[];
+}
+
+export interface Category extends Timestamps {
+    id: number;
+    board_id: (typeof Board)['id'];
+    name: string;
 }
