@@ -2,6 +2,7 @@ import { type Board, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
 import { CategoryCard, CategoryHeader } from '@/components/category';
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { Edit } from 'lucide-react';
 
@@ -31,11 +32,24 @@ export default function Show({ board }: { board: Board }) {
                 </div>
             </div>
             <div className="flex h-full w-full flex-row justify-items-stretch gap-4 overflow-x-scroll rounded-lg p-4">
-                {board.categories?.map((category) => (
-                    <CategoryCard key={category.id}>
-                        <CategoryHeader category={category} />
-                    </CategoryCard>
-                ))}
+                {(board.categories?.length &&
+                    board.categories.map((category) => (
+                        <CategoryCard key={category.id}>
+                            <CategoryHeader category={category} />
+                        </CategoryCard>
+                    ))) || (
+                    <>
+                        <CategoryCard className="p-0">
+                            <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                        </CategoryCard>
+                        <CategoryCard className="p-0">
+                            <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                        </CategoryCard>
+                        <CategoryCard className="p-0">
+                            <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                        </CategoryCard>
+                    </>
+                )}
             </div>
         </AppLayout>
     );

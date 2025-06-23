@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Board, Category } from '@/types';
 import { Timestamps } from '@/types/laravel';
 import { useForm } from '@inertiajs/react';
@@ -6,9 +7,14 @@ import DestroyButton from './button-destroy';
 import InputError from './input-error';
 import { Input } from './ui/input';
 
-export type CategoryCardProps = {};
-export function CategoryCard({ children }: React.PropsWithChildren<CategoryCardProps>) {
-    return <div className="flex h-full max-w-lg min-w-64 flex-col gap-2 rounded border-1 p-2">{children}</div>;
+type CategoryCardProps = React.ComponentProps<'div'>;
+export function CategoryCard({ className, children, ...props }: React.PropsWithChildren<CategoryCardProps>) {
+    const mergedClass = cn('flex h-full max-w-xl min-w-64 flex-col gap-2 rounded border-1 p-2', className);
+    return (
+        <div className={mergedClass} {...props}>
+            {children}
+        </div>
+    );
 }
 
 export type CategoryHeaderProps = {

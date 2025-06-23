@@ -159,6 +159,7 @@ export default function Show({ board }: { board: Board }) {
                 </form>
             </div>
             <div className="flex h-full w-full flex-row justify-items-stretch gap-4 overflow-x-scroll rounded-lg p-4">
+                {/* TODO make categories re-orderable */}
                 {(board.categories?.length &&
                     board.categories.map((category: Category) => (
                         <CategoryCard>
