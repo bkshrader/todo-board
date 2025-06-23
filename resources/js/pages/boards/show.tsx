@@ -1,7 +1,7 @@
 import { type Board, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { CategoryCard, CategoryHeader } from '@/components/category';
 import AppLayout from '@/layouts/app-layout';
 import { Edit } from 'lucide-react';
 
@@ -31,24 +31,11 @@ export default function Show({ board }: { board: Board }) {
                 </div>
             </div>
             <div className="flex h-full w-full flex-row justify-items-stretch gap-4 overflow-x-scroll rounded-lg p-4">
-                <div className="max-w-lg min-w-80 flex-grow">
-                    <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-                <div className="max-w-lg min-w-80 flex-grow">
-                    <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-                {/* <div className="min-w-80">
-                    <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-                <div className="min-w-80">
-                    <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-                <div className="min-w-80">
-                    <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-                <div className="min-w-80">
-                    <PlaceholderPattern className="inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div> */}
+                {board.categories?.map((category) => (
+                    <CategoryCard key={category.id}>
+                        <CategoryHeader category={category} />
+                    </CategoryCard>
+                ))}
             </div>
         </AppLayout>
     );

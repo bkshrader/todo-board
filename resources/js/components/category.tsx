@@ -15,7 +15,7 @@ export type CategoryHeaderProps = {
     category: Category;
 };
 export function CategoryHeader({ category }: CategoryHeaderProps) {
-    return <h2 className="text-lg font-semibold">{category.name}</h2>;
+    return <h2 className="font-semibold">{category.name}</h2>;
 }
 
 type CategoryEditForm = Omit<Category, 'id' | 'board_id' | keyof Timestamps>;
