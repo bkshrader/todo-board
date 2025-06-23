@@ -46,7 +46,7 @@ class BoardController extends Controller
     public function show(Board $board)
     {
         return Inertia::render('boards/show', [
-            'board' => $board,
+            'board' => $board->load('categories'),
         ]);
     }
 
@@ -56,7 +56,7 @@ class BoardController extends Controller
     public function edit(Board $board)
     {
         return Inertia::render('boards/edit', [
-            'board' => $board,
+            'board' => $board->load('categories'),
         ]);
     }
 

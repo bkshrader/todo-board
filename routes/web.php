@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('boards', App\Http\Controllers\BoardController::class);
+    Route::resource('boards.categories', App\Http\Controllers\CategoryController::class)->only(['store', 'update', 'destroy']);
 });
 
 require __DIR__.'/settings.php';
