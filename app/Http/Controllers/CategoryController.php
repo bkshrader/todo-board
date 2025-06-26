@@ -40,6 +40,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('boards.edit', ['board' => $category->board])->with('success', 'Category destroyed successfully');
+        return redirect()->route('boards.edit', ['board' => $board])->with('success', 'Category destroyed successfully');
     }
 }

@@ -66,15 +66,15 @@ class Category extends Model
                         ->increment('order');
                 });
             }
+        });
 
-            static::deleting(function (Category $category) {
-                // Mute events on the Category model to prevent unnecessary updates
-                Category::withoutEvents(function () use ($category) {
-                    // Shift categories above the deleted category down
-                    $category->board->categories()
-                        ->where('order', '>=', $category->order)
-                        ->decrement('order');
-                });
+        static::deleted(function (Category $category) {
+            // Mute events on the Category model to prevent unnecessary updates
+            Category::withoutEvents(function () use ($category) {
+                // Shift categories above the deleted category down
+                $category->board->categories()
+                    ->where('order', '>=', $category->order)
+                    ->decrement('order');
             });
         });
     }
