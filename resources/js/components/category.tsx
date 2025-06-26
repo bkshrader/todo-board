@@ -116,6 +116,7 @@ export function CategoryEditor<Method extends 'store' | 'update'>({
                 <InputError message={errors.name} />
             </div>
             {showDestroy && <DestroyButton type="button" variant="outline" onClick={handleDestroy} />}
+            <input type="submit" hidden />
         </form>
     );
 }
