@@ -95,7 +95,7 @@ export function CategoryEditor<Method extends 'store' | 'update'>({
                     id="order"
                     value={data.order}
                     placeholder="#"
-                    onChange={(e) => setData('order', parseInt(e.target.value) || undefined)}
+                    onChange={(e) => setData('order', Number.isNaN(e.target.value) ? undefined : parseInt(e.target.value))}
                     disabled={processing}
                     className="w-12"
                 />
