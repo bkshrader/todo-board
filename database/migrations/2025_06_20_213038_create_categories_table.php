@@ -17,6 +17,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->unsignedTinyInteger('order');
             $table->string('name');
             $table->timestamps();
         });

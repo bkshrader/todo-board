@@ -30,6 +30,13 @@ class Board extends Model
 
     public function categories(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Category::class)->orderBy('order');
+    }
+
+    public function reindexCategories(): void
+    {
+        $this->categories()->each(function (Category $category, int $index) {
+            $category->updateQuietly(['order' => $index]);
+        });
     }
 }

@@ -28,6 +28,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:64',
+            'order' => 'sometimes|nullable|integer|min:0|max:16',
         ];
     }
 }
