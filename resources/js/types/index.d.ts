@@ -58,4 +58,5 @@ export interface Category extends Timestamps {
     id: number;
     board_id: (typeof Board)['id'];
     name: string;
+    order?: number;
 }

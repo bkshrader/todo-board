@@ -163,7 +163,7 @@ export default function Show({ board }: { board: Board }) {
                 {(board.categories?.length &&
                     board.categories.map((category: Category) => (
                         <CategoryCard>
-                            <CategoryEditor method="update" category={category} showDestroy />
+                            <CategoryEditor method="update" category={category} onBlur={handleCategoryBlur} showDestroy />
                             {/* TODO insert Task list placeholder */}
                         </CategoryCard>
                     ))) || (

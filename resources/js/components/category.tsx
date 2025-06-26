@@ -52,13 +52,14 @@ export function CategoryEditor<Method extends 'store' | 'update'>({
         reset,
     } = useForm<CategoryEditForm>({
         name: category?.name || '',
+        order: category?.order,
     });
 
-    const inputRef = createRef<HTMLInputElement>();
+    const nameInputRef = createRef<HTMLInputElement>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        inputRef.current!.blur();
+        nameInputRef.current!.blur();
 
         if (data.name) {
             if (method === 'update') {
@@ -67,7 +68,7 @@ export function CategoryEditor<Method extends 'store' | 'update'>({
                     category: category!.id,
                 });
 
-                put(updateRoute, { preserveState: true });
+                put(updateRoute, { preserveState: false });
             } else if (method === 'store') {
                 const storeRoute = route('boards.categories.store', { board: board!.id });
 
@@ -88,6 +89,19 @@ export function CategoryEditor<Method extends 'store' | 'update'>({
     return (
         <form className="flex flex-row justify-stretch gap-1" onSubmit={handleSubmit}>
             <div className="flex grow flex-col">
+                {/* TODO replace with drag and drop */}
+                <Input
+                    type="text"
+                    id="order"
+                    value={data.order}
+                    placeholder="#"
+                    onChange={(e) => setData('order', parseInt(e.target.value) || undefined)}
+                    disabled={processing}
+                    className="w-12"
+                />
+                <InputError message={errors.name} />
+            </div>
+            <div className="flex grow flex-col">
                 <Input
                     type="text"
                     id="name"
@@ -97,7 +111,7 @@ export function CategoryEditor<Method extends 'store' | 'update'>({
                     onChange={(e) => setData('name', e.target.value)}
                     onBlur={onBlur}
                     disabled={processing}
-                    ref={inputRef}
+                    ref={nameInputRef}
                 />
                 <InputError message={errors.name} />
             </div>
