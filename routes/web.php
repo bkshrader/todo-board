@@ -14,6 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('boards', App\Http\Controllers\BoardController::class);
     Route::resource('boards.categories', App\Http\Controllers\CategoryController::class)->only(['store', 'update', 'destroy']);
+
+    Route::resource('tasks', App\Http\Controllers\TaskController::class);
 });
 
 require __DIR__.'/settings.php';

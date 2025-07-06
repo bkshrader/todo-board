@@ -20,7 +20,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $user->can('view', $task->category);
+        return $user->can('view', $task->board);
     }
 
     /**
@@ -36,7 +36,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->can('update', $task->category);
+        return $user->can('update', $task->board);
     }
 
     /**
@@ -44,7 +44,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->can('update', $task->category);
+        return $user->can('update', $task->board);
     }
 
     /**
@@ -52,7 +52,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task): bool
     {
-        return $user->can('update', $task->category);
+        return $user->can('update', $task->board);
     }
 
     /**
@@ -60,6 +60,6 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task): bool
     {
-        return $user->can('update', $task->category);
+        return $user->can('update', $task->board);
     }
 }
