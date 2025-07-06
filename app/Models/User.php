@@ -50,4 +50,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Board::class, 'owner_id');
     }
+
+    public function tasks()
+    {
+        // TODO update this relationship to support various means of assigning a task to a user
+        return $this->hasMany(Task::class, 'reporter_id');
+    }
 }
