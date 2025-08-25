@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Board;
+use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -17,7 +19,7 @@ class StoreTaskRequest extends FormRequest
             return false;
         }
 
-        $board = Board::find($this->input('board_id'));
+        $board = Board::find($this->input('board'));
 
         return $this->user()->can('update', $board);
     }
@@ -30,10 +32,16 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'board' => 'required|integer|exists:boards',
-            'category' => 'required|integer|exists:categories',
+            'board' => 'required|integer|exists:boards,id',
+            'category_id' => [
+                'required',
+                'integer',
+                Rule::exists(Category::class, 'id')->where(function ($query) {
+                    $query->where('board_id', $this->input('board'));
+                }),
+            ],
             'name' => 'required|string|max:255',
-            'description' => 'sometimes|nullable|string',
+            'description' => 'sometimes|nullable|string|max:4096',
         ];
     }
 }

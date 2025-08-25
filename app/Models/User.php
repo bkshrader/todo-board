@@ -51,9 +51,19 @@ class User extends Authenticatable
         return $this->hasMany(Board::class, 'owner_id');
     }
 
-    public function tasks()
+    public function ownedTasks()
     {
-        // TODO update this relationship to support various means of assigning a task to a user
         return $this->hasMany(Task::class, 'reporter_id');
+    }
+
+    public function assignedTasks()
+    {
+        // TODO add relationship for tasks assigned to user via shared boards
+    }
+
+    public function getTasks()
+    {
+        // TODO return all tasks assigned to or reported by user in all boards they have access to
+        // Should return a lazy collection of Task models
     }
 }

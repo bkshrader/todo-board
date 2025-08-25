@@ -18,6 +18,7 @@ class Task extends Model
     protected $fillable = [
         'name',
         'description',
+        'reporter_id',
     ];
 
     public function board(): HasOneThrough

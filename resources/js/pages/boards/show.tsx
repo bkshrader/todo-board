@@ -2,9 +2,11 @@ import { type Board, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
 import { CategoryCard, CategoryHeader } from '@/components/category';
+import { Button } from '@/components/ui/button';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
-import { Edit } from 'lucide-react';
+import { Edit, Plus } from 'lucide-react';
 
 export default function Show({ board }: { board: Board }) {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -31,7 +33,7 @@ export default function Show({ board }: { board: Board }) {
                     </Link>
                 </div>
             </div>
-            <div className="flex h-full w-full flex-row justify-items-stretch gap-4 overflow-x-scroll rounded-lg p-4">
+            <div className="flex h-full w-full flex-row justify-items-stretch gap-4 overflow-x-auto rounded-lg p-4">
                 {(board.categories?.length &&
                     board.categories.map((category) => (
                         <CategoryCard key={category.id}>
@@ -51,6 +53,18 @@ export default function Show({ board }: { board: Board }) {
                     </>
                 )}
             </div>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger className="absolute right-6 bottom-6">
+                        <Link href={route('tasks.create', { board: board.id })}>
+                            <Button className="h-12 w-12">
+                                <Plus />
+                            </Button>
+                        </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>Create New Task</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </AppLayout>
     );
 }

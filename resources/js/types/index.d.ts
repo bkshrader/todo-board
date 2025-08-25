@@ -51,12 +51,22 @@ export interface Board extends Timestamps, SoftDeletes {
     description?: string | null;
     emoji?: string | null;
     color?: string | null;
-    categories?: Category[];
+    categories?: Category[]; // TODO add relationship helpers?
 }
 
 export interface Category extends Timestamps {
     id: number;
-    board_id: (typeof Board)['id'];
+    board_id: (typeof Board)['id']; // FIXME gives any instead of desired number
     name: string;
     order?: number;
+    // TODO add relationships
+}
+
+export interface Task extends Timestamps, SoftDeletes {
+    id: number;
+    reporter_id: number;
+    category_id: number;
+    name: string;
+    description?: string | null;
+    // TODO add relationships
 }
