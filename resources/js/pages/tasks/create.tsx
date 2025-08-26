@@ -1,6 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { LoaderCircle, X } from 'lucide-react';
-import { FormEventHandler, MouseEventHandler } from 'react';
+import { FormEventHandler, MouseEventHandler, useEffect, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -30,18 +30,28 @@ type CreateTaskProps = {
 };
 
 export default function Create({ boards }: CreateTaskProps) {
-    const activeBoardId: number = route().params.board ? parseInt(route().params.board) : boards[0]?.id;
-    const activeBoard = boards.find((b) => b.id === activeBoardId);
+    const [activeBoardId, setActiveBoardId] = useState<number>(() => {
+        const boardParam = parseInt(route().params.board || 'NaN');
+
+        return isNaN(boardParam) ? boards[0]!.id! : boardParam;
+    });
 
     const { data, setData, post, processing, errors } = useForm<CreateTaskForm>({
-        category_id: activeBoard?.categories?.[0]?.id || 0,
+        category_id: 0,
         name: '',
         description: '',
     });
 
+    useEffect(() => {
+        const activeBoard = boards.find((b) => b.id === activeBoardId)!;
+        setData('category_id', activeBoard.categories?.[0]?.id || 0);
+    }, [activeBoardId]);
+
     const onBoardChanged: SelectValueChangedEventHandler = (value) => {
+        setActiveBoardId(parseInt(value));
         router.push({
             url: route('tasks.create', { board: value }),
+            preserveState: true,
         });
     };
 
@@ -119,7 +129,7 @@ export default function Create({ boards }: CreateTaskProps) {
                 <div className="grid gap-2">
                     <Label>Category</Label>
                     <Select
-                        defaultValue={data.category_id.toString()}
+                        value={data.category_id.toString()}
                         onValueChange={(value) => setData('category_id', parseInt(value))}
                         disabled={processing}
                     >
