@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Board;
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -12,9 +14,7 @@ class UpdateTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $targetBoard = Board::find($this->input('board_id'));
-
-        if ($this->user()->cannot('update', $targetBoard)) {
+        if ($this->user()->cannot('update', $this->getTargetBoard())) {
             return false;
         }
 
@@ -29,10 +29,22 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'board' => 'required|integer|exists:boards',
-            'category' => 'required|integer|exists:categories',
-            'name' => 'required|string|max:255',
-            'description' => 'sometimes|nullable|string',
+            'board' => 'sometimes|required|integer|exists:boards,id',
+            'category_id' => [
+                'required_with:board',
+                'sometimes',
+                'integer',
+                Rule::exists(Category::class, 'id')->where(function ($query) {
+                    $query->where('board_id', $this->getTargetBoard()->getKey());
+                }),
+            ],
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|nullable|string|max:4096',
         ];
+    }
+
+    public function getTargetBoard(): Board
+    {
+        return optional($this->input('board'), fn ($board) => Board::findOrFail($board)) ?? $this->route('task')->board;
     }
 }

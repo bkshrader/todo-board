@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -47,7 +48,9 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        // TODO create and show view with task details
+        return Inertia::render('tasks/show', [
+            'task' => $task->load(['board', 'board.categories', 'category', 'reporter']),
+        ]);
     }
 
     /**
@@ -64,17 +67,25 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         // Update relations if needed
-        $isBoardChanged = $request->validated('board') !== $task->board->key();
-        $isCategoryChanged = $request->validated('category') !== $task->category->key();
+        $isBoardChanged = optional($request->validated('board'), fn ($boardId) => $boardId !== $task->board->getKey());
+        $isCategoryChanged = optional($request->validated('category_id'), fn ($categoryId) => $categoryId !== $task->category->getKey());
+        Log::debug('Updating task relations', [
+            'board' => $request->validated('board'),
+            'category_id' => $request->validated('category_id'),
+            'task' => $task->toArray(),
+            'isBoardChanged' => $isBoardChanged,
+            'isCategoryChanged' => $isCategoryChanged,
+        ]);
         if ($isBoardChanged || $isCategoryChanged) {
-
-            $targetBoard = $request->user()->boards()->findOrFail($request->validated('board'));
-            $targetCategory = $targetBoard->categories()->findOrFail($request->validated('category'));
+            $targetCategory = $request->getTargetBoard()->categories()->findOrFail($request->validated('category_id'));
             $task->category()->associate($targetCategory);
         }
 
         // Update other fields
-        $task->update($request->validated()->except(['board', 'category']));
+        $task->update($request->safe()->except(['board', 'category_id']));
+        Log::debug('Updated task', ['task' => $task->toArray()]);
+
+        return redirect()->route('tasks.show', ['task' => $task])->with('success', 'Task updated successfully.');
     }
 
     /**
@@ -84,6 +95,6 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return redirect()->route('boards.show', $task->board)->with('success', 'Task deleted successfully.');
+        return redirect()->route('boards.show', ['board' => $task->board])->with('success', 'Task deleted successfully.');
     }
 }

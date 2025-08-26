@@ -6,15 +6,24 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+    type SelectValueChangedEventHandler,
+} from '@/components/ui/select';
 import { TextArea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import type { Board, Task } from '@/types';
 import { TooltipTrigger } from '@radix-ui/react-tooltip';
 
-type SelectValueChangeEventHandler = React.ComponentProps<typeof Select>['onValueChange'];
-type CreateTaskForm = Omit<Task, 'id' | 'reporter_id' | 'created_at' | 'updated_at' | 'deleted_at'>;
+type CreateTaskForm = Omit<
+    Task,
+    'id' | 'reporter_id' | 'created_at' | 'updated_at' | 'deleted_at' | 'reporter' | 'board' | 'category'
+>;
 type CreateTaskProps = {
     board: Board;
     boards: Board[];
@@ -30,7 +39,7 @@ export default function Create({ boards }: CreateTaskProps) {
         description: '',
     });
 
-    const onBoardChanged: SelectValueChangeEventHandler = (value) => {
+    const onBoardChanged: SelectValueChangedEventHandler = (value) => {
         router.visit(route('tasks.create', { board: value }));
     };
 
@@ -55,12 +64,21 @@ export default function Create({ boards }: CreateTaskProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create a Task" />
-            <form className="flex flex-col gap-6 p-4" onSubmit={submit}>
+            <form
+                className="flex flex-col gap-6 p-4"
+                onSubmit={submit}
+            >
                 {/* Cancel Button */}
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button type="button" variant="outline" className="h-8 w-8 rounded-full" disabled={processing} onClick={cancel}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="h-8 w-8 rounded-full"
+                                disabled={processing}
+                                onClick={cancel}
+                            >
                                 <X />
                             </Button>
                         </TooltipTrigger>
@@ -70,14 +88,24 @@ export default function Create({ boards }: CreateTaskProps) {
                 {/* TODO add board select with current board as default - add to query on change */}
                 <div className="grid gap-2">
                     <Label>Board</Label>
-                    <Select defaultValue={activeBoardId.toString()} onValueChange={onBoardChanged} disabled={processing}>
-                        <SelectTrigger className="SelectTrigger" aria-label="Food">
+                    <Select
+                        defaultValue={activeBoardId.toString()}
+                        onValueChange={onBoardChanged}
+                        disabled={processing}
+                    >
+                        <SelectTrigger
+                            className="SelectTrigger"
+                            aria-label="Food"
+                        >
                             <SelectValue placeholder="Select a board…" />
                         </SelectTrigger>
                         <SelectContent>
                             {boards.map((b) => {
                                 return (
-                                    <SelectItem key={`board-${b.id}`} value={b.id.toString()}>
+                                    <SelectItem
+                                        key={`board-${b.id}`}
+                                        value={b.id.toString()}
+                                    >
                                         {b.name}
                                     </SelectItem>
                                 );
@@ -93,7 +121,10 @@ export default function Create({ boards }: CreateTaskProps) {
                         onValueChange={(value) => setData('category_id', parseInt(value))}
                         disabled={processing}
                     >
-                        <SelectTrigger className="SelectTrigger" aria-label="Food">
+                        <SelectTrigger
+                            className="SelectTrigger"
+                            aria-label="Food"
+                        >
                             <SelectValue placeholder="Select a category…" />
                         </SelectTrigger>
                         <SelectContent>
@@ -101,7 +132,10 @@ export default function Create({ boards }: CreateTaskProps) {
                                 .find((b) => b.id === activeBoardId)
                                 ?.categories?.map((c) => {
                                     return (
-                                        <SelectItem key={`category-${c.id}`} value={c.id.toString()}>
+                                        <SelectItem
+                                            key={`category-${c.id}`}
+                                            value={c.id.toString()}
+                                        >
                                             {c.name}
                                         </SelectItem>
                                     );
@@ -124,7 +158,10 @@ export default function Create({ boards }: CreateTaskProps) {
                             disabled={processing}
                             placeholder="Task name"
                         />
-                        <InputError message={errors.name} className="mt-2" />
+                        <InputError
+                            message={errors.name}
+                            className="mt-2"
+                        />
                     </div>
 
                     <div className="grid gap-2">
@@ -141,7 +178,12 @@ export default function Create({ boards }: CreateTaskProps) {
                         <InputError message={errors.description} />
                     </div>
 
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="mt-2 w-full"
+                        tabIndex={5}
+                        disabled={processing}
+                    >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Create task
                     </Button>
