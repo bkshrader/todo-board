@@ -40,7 +40,9 @@ export default function Create({ boards }: CreateTaskProps) {
     });
 
     const onBoardChanged: SelectValueChangedEventHandler = (value) => {
-        router.visit(route('tasks.create', { board: value }));
+        router.push({
+            url: route('tasks.create', { board: value }),
+        });
     };
 
     const submit: FormEventHandler = (e) => {
