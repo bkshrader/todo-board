@@ -1,7 +1,8 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 
 import DestroyButton from '@/components/button-destroy';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -10,13 +11,28 @@ import {
     SelectValue,
     type SelectValueChangedEventHandler,
 } from '@/components/ui/select';
+import { TextArea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { UserInfo } from '@/components/user-info';
 import AppLayout from '@/layouts/app-layout';
 import { Category, Task } from '@/types';
-import { Archive, EditIcon, Trash } from 'lucide-react';
+import { Archive, Check, Trash, X } from 'lucide-react';
+import { createRef, Ref } from 'react';
 
-type ShowTaskProps = {
+type EditTaskForm = Omit<
+    Task,
+    | 'id'
+    | 'reporter_id'
+    | 'category_id'
+    | 'created_at'
+    | 'updated_at'
+    | 'deleted_at'
+    | 'board'
+    | 'category'
+    | 'reporter'
+    | 'comments'
+>;
+type EditTaskProps = {
     task: Task;
     categories: Category[];
 };
@@ -30,7 +46,7 @@ function DetailItem({ label, children }: React.PropsWithChildren<{ label: string
     );
 }
 
-export default function Show({ task }: ShowTaskProps) {
+export default function Edit({ task }: EditTaskProps) {
     const breadcrumbs = [
         {
             title: 'Boards',
@@ -45,6 +61,8 @@ export default function Show({ task }: ShowTaskProps) {
             href: route('tasks.show', { task: task.id }),
         },
     ];
+
+    const formRef: Ref<HTMLFormElement> = createRef();
 
     const onCategoryChanged: SelectValueChangedEventHandler = (value) => {
         console.log('Category changed to', value);
@@ -61,25 +79,50 @@ export default function Show({ task }: ShowTaskProps) {
         alert('TODO: Archive Task');
     };
 
+    const { data, setData, put } = useForm<EditTaskForm>({
+        name: task.name,
+        description: task.description,
+    });
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        put(route('tasks.update', { task: task.id }));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Task Details - ${task.name}`} />
 
             <div className="grid h-full grid-cols-3 gap-2 p-4">
-                <div className="col-span-2 flex flex-col gap-4">
-                    <h1 className="text-2xl font-bold">{task.name}</h1>
+                <div className="col-span-2">
+                    <form
+                        className="flex flex-col gap-4"
+                        onSubmit={submit}
+                        ref={formRef}
+                    >
+                        <Input
+                            className="font-bold"
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                        />
 
-                    <div>
-                        <h3 className="text-xs font-semibold">Description</h3>
-                        <p className="min-h-32 p-1">
-                            {task.description || <span className="text-neutral-600">No Description</span>}
-                        </p>
-                    </div>
+                        <div>
+                            <h3 className="text-xs font-semibold">Description</h3>
+                            {/* TODO add markdown support */}
+                            <TextArea
+                                className="min-h-32"
+                                value={data.description || ''}
+                                placeholder="No Description"
+                                onChange={(e) => setData('description', e.target.value)}
+                            />
+                        </div>
 
-                    <div>
-                        <h3 className="text-xs font-semibold">Activity</h3>
-                        <p className="p-1">Activity feed coming soon...</p>
-                    </div>
+                        <div>
+                            <h3 className="text-xs font-semibold">Activity</h3>
+                            <p className="p-1">Activity feed coming soon...</p>
+                        </div>
+                    </form>
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -131,13 +174,22 @@ export default function Show({ task }: ShowTaskProps) {
 
                         <Tooltip>
                             <TooltipTrigger>
-                                <Link href={route('tasks.edit', { task: task.id })}>
-                                    <Button>
-                                        <EditIcon />
+                                <Button onClick={() => formRef.current?.requestSubmit()}>
+                                    <Check />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Save Changes</TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Link href={route('tasks.show', { task: task.id })}>
+                                    <Button variant="outline">
+                                        <X />
                                     </Button>
                                 </Link>
                             </TooltipTrigger>
-                            <TooltipContent>Edit Task</TooltipContent>
+                            <TooltipContent>Cancel</TooltipContent>
                         </Tooltip>
                     </div>
                     <div className="flex-grow rounded border p-2 shadow-md">

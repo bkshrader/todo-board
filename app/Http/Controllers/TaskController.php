@@ -58,7 +58,9 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        // TODO
+        return Inertia::render('tasks/edit', [
+            'task' => $task->load(['board', 'board.categories', 'category', 'reporter']),
+        ]);
     }
 
     /**

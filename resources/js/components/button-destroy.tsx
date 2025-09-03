@@ -23,11 +23,17 @@ export default function DestroyButton({ variant, onClick, onBlur, children, ...p
 
         setShowConfirm(false);
 
-        handleBlur?.(e);
+        onBlur?.(e);
     };
 
     return (
-        <Button data-confirm={showConfirm} variant={showConfirm ? 'destructive' : variant} onClick={handleClick} onBlur={handleBlur} {...props}>
+        <Button
+            data-confirm={showConfirm}
+            variant={showConfirm ? 'destructive' : variant}
+            onClick={handleClick}
+            onBlur={handleBlur}
+            {...props}
+        >
             {children ?? <Trash />}
         </Button>
     );

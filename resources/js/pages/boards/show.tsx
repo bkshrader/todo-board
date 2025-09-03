@@ -67,8 +67,11 @@ export default function Show({ board }: { board: Board }) {
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger className="absolute right-6 bottom-6">
-                        <Link href={route('tasks.create', { board: board.id })}>
-                            <Button className="h-12 w-12">
+                        <Link href={board.categories?.length ? route('tasks.create', { board: board.id }) : ''}>
+                            <Button
+                                className="h-12 w-12"
+                                disabled={!board.categories?.length}
+                            >
                                 <Plus />
                             </Button>
                         </Link>
