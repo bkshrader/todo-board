@@ -28,7 +28,6 @@ type CreateTaskForm = Omit<
     'id' | 'reporter_id' | 'created_at' | 'updated_at' | 'deleted_at' | 'reporter' | 'board' | 'category'
 >;
 type CreateTaskProps = {
-    board: Board;
     boards: Board[];
 };
 
@@ -36,24 +35,35 @@ export default function Create({ boards }: CreateTaskProps) {
     const [activeBoardId, setActiveBoardId] = useState<number>(() => {
         const boardParam = parseInt(route().params.board || 'NaN');
 
-        return isNaN(boardParam) ? boards[0]!.id! : boardParam;
+        return isNaN(boardParam) ? boards[0]!.id : boardParam;
     });
 
     const { data, setData, post, processing, errors } = useForm<CreateTaskForm>({
-        category_id: 0,
+        category_id: boards.find((b) => b.id === activeBoardId)?.categories![0].id ?? 0,
         name: '',
         description: '',
     });
 
+    // Set category to default of active board if active board changes and current category is not part of new board
     useEffect(() => {
         const activeBoard = boards.find((b) => b.id === activeBoardId)!;
-        setData('category_id', activeBoard.categories?.[0]?.id || 0);
+        if (!activeBoard.categories!.find((c) => c.id === data.category_id)) {
+            const defaultCategory = activeBoard.categories![0];
+
+            console.log('Active board changed to', activeBoard, 'default category is', defaultCategory);
+            setData('category_id', defaultCategory.id);
+        }
     }, [activeBoardId]);
 
     const onBoardChanged: SelectValueChangedEventHandler = (value) => {
-        setActiveBoardId(parseInt(value));
+        const parsedValue = parseInt(value);
+        if (isNaN(parsedValue) || parsedValue === activeBoardId) {
+            return;
+        }
+
+        setActiveBoardId(parsedValue);
         router.push({
-            url: route('tasks.create', { board: value }),
+            url: route('tasks.create', { board: parsedValue }),
             preserveState: true,
         });
     };
@@ -138,10 +148,7 @@ export default function Create({ boards }: CreateTaskProps) {
                         onValueChange={(value) => setData('category_id', parseInt(value))}
                         disabled={processing}
                     >
-                        <SelectTrigger
-                            className="SelectTrigger"
-                            aria-label="Food"
-                        >
+                        <SelectTrigger aria-label="category">
                             <SelectValue placeholder="Select a category…" />
                         </SelectTrigger>
                         <SelectContent>
