@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -95,8 +96,17 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $task->delete();
+        // If 'force' query parameter is true, permanently delete the task
+        // Otherwise, perform a soft delete
+        $method = request()->input('force') === 'true' ? 'forceDelete' : 'delete';
+        $methodName = $method === 'forceDelete' ? 'deleted' : 'archived';
 
-        return redirect()->route('boards.show', ['board' => $task->board])->with('success', 'Task deleted successfully.');
+        if (! request()->user()->can($method, $task)) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        $task->{$method}();
+
+        return redirect()->route('boards.show', ['board' => $task->board])->with('success', "Task {$methodName} successfully.");
     }
 }

@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 
-import DestroyButton from '@/components/button-destroy';
+import ArchiveTask from '@/components/archive-task';
+import DeleteTask from '@/components/delete-task';
 import Markdown from '@/components/text-markdown';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { UserInfo } from '@/components/user-info';
 import AppLayout from '@/layouts/app-layout';
 import { Category, Task } from '@/types';
-import { Archive, EditIcon, Trash } from 'lucide-react';
+import { EditIcon } from 'lucide-react';
 
 type ShowTaskProps = {
     task: Task;
@@ -52,14 +53,6 @@ export default function Show({ task }: ShowTaskProps) {
         router.put(route('tasks.update', { task: task.id }), {
             category_id: parseInt(value),
         });
-    };
-
-    const deleteTask = () => {
-        alert('TODO: Delete Task');
-    };
-
-    const archiveTask = () => {
-        alert('TODO: Archive Task');
     };
 
     return (
@@ -109,26 +102,9 @@ export default function Show({ task }: ShowTaskProps) {
                             </SelectContent>
                         </Select>
 
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Button onClick={archiveTask}>
-                                    <Archive />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Archive Task</TooltipContent>
-                        </Tooltip>
+                        <ArchiveTask task={task.id} />
 
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <DestroyButton onClick={deleteTask}>
-                                    <Trash />
-                                    <span className="hidden overflow-hidden transition-discrete in-data-[confirm=true]:inline-block">
-                                        Delete Task
-                                    </span>
-                                </DestroyButton>
-                            </TooltipTrigger>
-                            <TooltipContent>Delete Task</TooltipContent>
-                        </Tooltip>
+                        <DeleteTask task={task.id} />
 
                         <Tooltip>
                             <TooltipTrigger>
