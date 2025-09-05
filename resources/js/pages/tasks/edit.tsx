@@ -1,6 +1,7 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 
 import DestroyButton from '@/components/button-destroy';
+import MarkdownInput from '@/components/input-markdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -11,13 +12,15 @@ import {
     SelectValue,
     type SelectValueChangedEventHandler,
 } from '@/components/ui/select';
-import { TextArea } from '@/components/ui/textarea';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { UserInfo } from '@/components/user-info';
 import AppLayout from '@/layouts/app-layout';
 import { Category, Task } from '@/types';
-import { Archive, Check, Trash, X } from 'lucide-react';
-import { createRef, Ref } from 'react';
+import { Archive, Check, EditIcon, EyeIcon, Trash, X } from 'lucide-react';
+import { ComponentProps, createRef, Ref, useState } from 'react';
+
+type MarkdownInputMode = ComponentProps<typeof MarkdownInput>['mode'];
 
 type EditTaskForm = Omit<
     Task,
@@ -90,6 +93,8 @@ export default function Edit({ task }: EditTaskProps) {
         put(route('tasks.update', { task: task.id }));
     };
 
+    const [markdownPreviewMode, setMarkdownPreviewMode] = useState<MarkdownInputMode>('edit');
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Task Details - ${task.name}`} />
@@ -109,9 +114,36 @@ export default function Edit({ task }: EditTaskProps) {
                         />
 
                         <div>
-                            <h3 className="text-xs font-semibold">Description</h3>
-                            {/* TODO add markdown support */}
-                            <TextArea
+                            <div className="mb-1 flex flex-grow flex-row items-baseline justify-between">
+                                <h3 className="text-xs font-semibold">Description</h3>
+                                <ToggleGroup
+                                    id="markdown-mode"
+                                    variant="default"
+                                    size="sm"
+                                    type="single"
+                                    onValueChange={(value) => setMarkdownPreviewMode(value as MarkdownInputMode)}
+                                    value={markdownPreviewMode}
+                                >
+                                    <ToggleGroupItem value="edit">
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <EditIcon />
+                                            </TooltipTrigger>
+                                            <TooltipContent>Edit</TooltipContent>
+                                        </Tooltip>
+                                    </ToggleGroupItem>
+                                    <ToggleGroupItem value="preview">
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <EyeIcon />
+                                            </TooltipTrigger>
+                                            <TooltipContent>Preview</TooltipContent>
+                                        </Tooltip>
+                                    </ToggleGroupItem>
+                                </ToggleGroup>
+                            </div>
+                            <MarkdownInput
+                                mode={markdownPreviewMode}
                                 className="min-h-32"
                                 value={data.description || ''}
                                 placeholder="No Description"
@@ -176,7 +208,7 @@ export default function Edit({ task }: EditTaskProps) {
 
                         <Tooltip>
                             <TooltipTrigger>
-                                <Button onClick={() => formRef.current?.requestSubmit()}>
+                                <Button onClick={() => formRef.current!.requestSubmit()}>
                                     <Check />
                                 </Button>
                             </TooltipTrigger>
