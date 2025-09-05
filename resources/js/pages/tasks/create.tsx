@@ -1,8 +1,9 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { LoaderCircle, X } from 'lucide-react';
-import { FormEventHandler, MouseEventHandler, useEffect, useState } from 'react';
+import { Edit, Eye, LoaderCircle, X } from 'lucide-react';
+import { ComponentProps, FormEventHandler, MouseEventHandler, useEffect, useState } from 'react';
 
 import InputError from '@/components/input-error';
+import MarkdownInput from '@/components/input-markdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,11 +15,13 @@ import {
     SelectValue,
     type SelectValueChangedEventHandler,
 } from '@/components/ui/select';
-import { TextArea } from '@/components/ui/textarea';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import type { Board, Task } from '@/types';
 import { TooltipTrigger } from '@radix-ui/react-tooltip';
+
+type MarkdownInputMode = ComponentProps<typeof MarkdownInput>['mode'];
 
 type CreateTaskForm = Omit<
     Task,
@@ -72,6 +75,8 @@ export default function Create({ boards }: CreateTaskProps) {
             href: route('tasks.create', { board: activeBoardId }),
         },
     ];
+
+    const [markdownPreviewMode, setMarkdownPreviewMode] = useState<MarkdownInputMode>('edit');
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -177,8 +182,36 @@ export default function Create({ boards }: CreateTaskProps) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="description">Description</Label>
-                        <TextArea
+                        <div className="flex flex-row justify-between">
+                            <Label htmlFor="description">Description</Label>
+                            <ToggleGroup
+                                id="markdown-mode"
+                                variant="default"
+                                size="sm"
+                                type="single"
+                                onValueChange={(value) => setMarkdownPreviewMode(value as MarkdownInputMode)}
+                                value={markdownPreviewMode}
+                            >
+                                <ToggleGroupItem value="edit">
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <Edit />
+                                        </TooltipTrigger>
+                                        <TooltipContent>Edit</TooltipContent>
+                                    </Tooltip>
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="preview">
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <Eye />
+                                        </TooltipTrigger>
+                                        <TooltipContent>Preview</TooltipContent>
+                                    </Tooltip>
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </div>
+                        <MarkdownInput
+                            mode={markdownPreviewMode}
                             id="description"
                             tabIndex={2}
                             autoComplete="description"
@@ -187,6 +220,7 @@ export default function Create({ boards }: CreateTaskProps) {
                             disabled={processing}
                             placeholder="Task description (optional)"
                         />
+
                         <InputError message={errors.description} />
                     </div>
 
@@ -195,6 +229,7 @@ export default function Create({ boards }: CreateTaskProps) {
                         className="mt-2 w-full"
                         tabIndex={5}
                         disabled={processing}
+                        variant="outline"
                     >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Create task
