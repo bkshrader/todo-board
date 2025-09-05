@@ -105,6 +105,7 @@ export default function Edit({ task }: EditTaskProps) {
                             className="font-bold"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
+                            autoComplete="off"
                         />
 
                         <div>
@@ -115,6 +116,7 @@ export default function Edit({ task }: EditTaskProps) {
                                 value={data.description || ''}
                                 placeholder="No Description"
                                 onChange={(e) => setData('description', e.target.value)}
+                                autoComplete="off"
                             />
                         </div>
 

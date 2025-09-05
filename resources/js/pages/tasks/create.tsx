@@ -176,7 +176,7 @@ export default function Create({ boards }: CreateTaskProps) {
                             required
                             autoFocus
                             tabIndex={1}
-                            autoComplete="name"
+                            autoComplete="off"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             disabled={processing}
@@ -221,7 +221,7 @@ export default function Create({ boards }: CreateTaskProps) {
                             mode={markdownPreviewMode}
                             id="description"
                             tabIndex={2}
-                            autoComplete="description"
+                            autoComplete="off"
                             value={data.description || undefined}
                             onChange={(e) => setData('description', e.target.value || null)}
                             disabled={processing}
