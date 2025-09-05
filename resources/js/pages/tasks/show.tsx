@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 
 import DestroyButton from '@/components/button-destroy';
+import Markdown from '@/components/text-markdown';
 import { Button } from '@/components/ui/button';
 import {
     Select,
@@ -72,7 +73,7 @@ export default function Show({ task }: ShowTaskProps) {
                     <div>
                         <h3 className="text-xs font-semibold">Description</h3>
                         <p className="min-h-32 p-1">
-                            {task.description || <span className="text-neutral-600">No Description</span>}
+                            <Markdown>{task.description || '*No Description*'}</Markdown>
                         </p>
                     </div>
 
