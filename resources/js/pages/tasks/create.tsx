@@ -38,7 +38,7 @@ export default function Create({ boards }: CreateTaskProps) {
         return isNaN(boardParam) ? boards[0]!.id : boardParam;
     });
 
-    const { data, setData, post, processing, errors } = useForm<CreateTaskForm>({
+    const { data, setData, post, processing, errors } = useForm<CreateTaskForm>('CreateTask', {
         category_id: boards.find((b) => b.id === activeBoardId)?.categories![0].id ?? 0,
         name: '',
         description: '',
